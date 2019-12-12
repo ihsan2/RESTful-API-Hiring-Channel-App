@@ -1,9 +1,9 @@
 const db = require('../configs/db')
 
 module.exports = {
-    checkEmailExistsEngineer: (email) => {
+    checkEmailExistsEngineer: (email, password) => {
         return new Promise((resolve, reject) => {
-            db.query(`SELECT id FROM engineer WHERE email = ?`, email, (err, result) => {
+            db.query(`SELECT id FROM engineer WHERE email = ? and password = ?`, [email, password], (err, result) => {
                 if (!err) {
                     resolve(result)
                 } else {
@@ -12,9 +12,9 @@ module.exports = {
             })
         })
     },
-    checkEmailExistsCompany: (email) => {
+    checkEmailExistsCompany: (email, password) => {
         return new Promise((resolve, reject) => {
-            db.query(`SELECT id FROM company WHERE email = ?`, email, (err, result) => {
+            db.query(`SELECT id FROM company WHERE email = ? and password = ?`, [email, password], (err, result) => {
                 if (!err) {
                     resolve(result)
                 } else {

@@ -1,6 +1,5 @@
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
-const db = require('../configs/db')
 
 const jwtSecret = process.env.JWT_SECRET
 // import model
@@ -36,9 +35,9 @@ module.exports = {
             })
     },
     authEngineer: (req, res) => {
-        const {email} = req.body
+        const {email, password} = req.body
         let id = ''
-        authsModel.checkEmailExistsEngineer(email)
+        authsModel.checkEmailExistsEngineer(email, password)
             .then(result => {
                 id = JSON.stringify(result);
                 id = id.split('\"')[3]
@@ -49,7 +48,7 @@ module.exports = {
                 if (!id) {
                     res.status(404).json({
                         status: 404,
-                        message: 'Email Not Found',
+                        message: 'Error! Email or Password is wrong',
                     }) 
                     return
                 } else {
@@ -64,9 +63,9 @@ module.exports = {
             }) 
     },
     authCompany: (req, res) => {
-        const {email} = req.body
+        const {email, password} = req.body
         let id = ''
-        authsModel.checkEmailExistsCompany(email)
+        authsModel.checkEmailExistsCompany(email, password)
             .then(result => {
                 id = JSON.stringify(result);
                 id = id.split('\"')[3]
@@ -77,7 +76,7 @@ module.exports = {
                 if (!id) {
                     res.status(404).json({
                         status: 404,
-                        message: 'Email Not Found',
+                        message: 'Error! Email or Password is wrong.',
                     }) 
                     return
                 } else {
