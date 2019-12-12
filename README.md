@@ -1,1 +1,1 @@
-# RESTful-API-Hiring-Channel-App
+# Simpel RESTful API Hiring Channel App
