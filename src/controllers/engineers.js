@@ -3,26 +3,56 @@ const uuidv4 = require('uuid/v4')
 const db = require('../configs/db')
 // import model
 const engineersModel = require('../models/engineers')
+const responseHelper = require('../helper/response')
 
 const maxSize = 1024 * 1024 * 1 //set maximun size of file image to 1 MB
 
 module.exports = {
     getEngineers: (req, res) => {
-        engineersModel.getEngineers()
-            .then(result => {
-                res.status(200).json({
-                    status: 200,
-                    error: false,
-                    data: result,
+        const searchBy = req.query.searchBy ? req.query.searchBy : 'name'
+        const searchValue = req.query.searchValue ? req.query.searchValue : ''
+        const sort = req.query.sort ? req.query.sort : 'name'
+        const order = req.query.order ? req.query.order : 'asc'
+        const page = req.query.page ? req.query.page : 1
+        const limit = req.query.limit ? req.query.limit : 5
+
+        const offset = (page - 1) * limit
+        let totalRow = 0
+        let totalPage = 0
+
+        const sqlTotalPageRow = `SELECT COUNT(*) totalRow FROM engineer WHERE ${searchBy} like '%${searchValue}%'`
+
+        db.query(sqlTotalPageRow, (err, result) => {
+            totalRow = result[0].totalRow
+            totalPage = totalRow / limit
+            if (totalRow % limit > 0) {
+                totalPage = parseInt(totalPage) + 1
+            }
+
+            const prevPage = parseInt(page) === 1 ? 1 : parseInt(page) - 1
+            const nextPage = parseInt(page) === totalPage ? totalPage : parseInt(page) + 1
+
+            const pageDetail = {
+                totalRow,
+                totalPage: totalPage,
+                perPage: limit,
+                currentPage: page,
+                prevLink: `localhost:3000${req.originalUrl.replace('page=' + page, 'page=' + parseInt(prevPage))}`,
+                nextLink: req.originalUrl.indexOf('page') === -1 && req.originalUrl.indexOf('?') === -1 ? `localhost:3000${req.originalUrl + '?page=' + parseInt(nextPage)}` :  req.originalUrl.indexOf('page') === -1 && req.originalUrl.indexOf('?') > -1 ? `localhost:3000${req.originalUrl + '&page=' + parseInt(nextPage)}` : `localhost:3000${req.originalUrl.replace('page=' + page, 'page=' + parseInt(nextPage))}`
+            }
+            
+            if (page > totalPage) {
+                return responseHelper.response(res, 400, true, `Page Not Found. Total Page is only ${totalPage}`)
+            } else {
+                engineersModel.getEngineers(searchBy, searchValue, sort, order, offset, limit)
+                .then(result => {
+                    return responseHelper.response(res, 200, false, 'Success get engineers', pageDetail, result)
                 })
-            })
-            .catch(err => {
-                res.status(400).json({
-                    status: 400,
-                    error: true,
-                    message: 'Error get engineers',
+                .catch(err => {
+                    return responseHelper.response(res, 400, true, 'Error get engineers')
                 })
-            })
+            }
+        })
     },
     createEngineer: (req, res) => {
         const id = uuidv4();
@@ -33,19 +63,10 @@ module.exports = {
         const data = {id, email, password, name, image, description, skill, location, date_of_birth, showcase, date_created, date_updated}
         engineersModel.createEngineer(data)
             .then(result => {
-                res.status(200).json({
-                    status: 200,
-                    error: false,
-                    data,
-                    message: 'Success create a New Engineer'
-                })
+                return responseHelper.response(res, 200, false, 'Success create a new engineer', result)
             })
             .catch(err => {
-                res.status(400).json({
-                    status: 400,
-                    error: true,
-                    message: 'Error create a new engineer'
-                })
+                return responseHelper.response(res, 400, true, 'Error create a new engineer')
             })        
     },
     updateEngineer: (req, res) => {
@@ -54,173 +75,22 @@ module.exports = {
         const image = req.file.filename;
         const date_updated=new Date();
         const data = {id, email, password, name, image, description, skill, location, date_of_birth, showcase, date_updated}
-        if (req.file.size > maxSize) {
-            res.status(400).json({
-                status: 400,
-                error: true,
-                message: 'Error! File Too Large.'
-            }) 
-        } else {
-            engineersModel.updateEngineer(data, id)
+        engineersModel.updateEngineer(data, id)
             .then(result => {
-                res.status(200).json({
-                    status: 200,
-                    error: false,
-                    data,
-                    message: 'Success update engineer with id: ' + id
-                })
+                return responseHelper.response(res, 200, false, `Success update engineer with id: ${id}`, result)
             })
             .catch(err => {
-                res.status(400).json({
-                    status: 400,
-                    error: true,
-                    message: 'Error update engineer with id: ' + id
-                })
-            })
-        }        
+                return responseHelper.response(res, 400, true, `Error update engineer with id: ${id}`)
+            })          
     },
     deleteEngineer: (req, res) => {
         const id = req.params.id
         engineersModel.deleteEngineer(id)
-            .then(result => {
-                res.status(201).json({
-                    status: 201,
-                    error: false,
-                    message: 'Success delete engineer with id: ' + id
-                })
-            })
-            .catch(err => {
-                res.status(400).json({
-                    status: 400,
-                    error: true,
-                    message: err
-                })
-            })
-    },
-    searchEngineers: (req, res) => {
-        const {name, skill} = req.body;
-        engineersModel.searchEngineers(name, skill)
-            .then(result => {
-                if (result.length > 0) {
-                    resutl = result;
-                } else {
-                    result = "Data Not Found!"
-                }
-                res.status(200).json({
-                    status: 200,
-                    error: false,
-                    data: result,
-                })
-            })
-            .catch(err => {
-                res.status(400).json({
-                    status: 400,
-                    error: true,
-                    message: err
-                })
-            })
-    },
-    sortEngineersByName: (req, res) => {
-        const order = req.body.order;
-        engineersModel.sortEngineersByName(order)
-            .then(result => {
-                res.status(200).json({
-                    status: 200,
-                    error: false,
-                    data: result,
-                })
-            })
-            .catch(err => {
-                res.status(400).json({
-                    status: 400,
-                    error: true,
-                    message: err
-                })
-            })
-    },
-    sortEngineersBySkill: (req, res) => {
-        const order = req.body.order;
-        engineersModel.sortEngineersBySkill(order)
-            .then(result => {
-                res.status(200).json({
-                    status: 200,
-                    error: false,
-                    data: result,
-                })
-            })
-            .catch(err => {
-                res.status(400).json({
-                    status: 400,
-                    error: true,
-                    message: err
-                })
-            })
-    },
-    sortEngineersByDateUpdated: (req, res) => {
-        const order = req.body.order;
-        engineersModel.sortEngineersByDateUpdated(order)
-            .then(result => {
-                res.status(200).json({
-                    status: 200,
-                    error: false,
-                    data: result,
-                })
-            })
-            .catch(err => {
-                res.status(400).json({
-                    status: 400,
-                    error: true,
-                    message: err
-                })
-            })
-    },
-    pageEngineers: (req, res) => {
-        const page = parseInt(req.query.page)
-        const limit = 5
-
-        const startIndex = (page - 1) * limit
-        const endIndex = limit
-        let totalRow = 0
-        let totalPage = 0
-
-        db.query("SELECT count(*) totalRow FROM engineer", (err, result) => {
-            totalRow = result[0].totalRow
-            totalPage = totalRow / limit
-            if (totalRow % limit > 0) {
-                totalPage = parseInt(totalPage) + 1
-            }
-            
-            if (page > totalPage) {
-                res.status(400).json({
-                    status: 400,
-                    error: true,
-                    message: `Page Not Found. Total Page is only ${totalPage}`
-                })
-            } else {
-                engineersModel.pageEngineers(startIndex, endIndex)
-                .then(result => {
-                    res.status(200).json({
-                    status: 200,
-                    error: false,
-                    data_page: {
-                        totalRow,
-                        totalPage: totalPage,
-                        perPage: limit,
-                        prevPage: page - 1,
-                        currentPage: page,
-                        nextPage: page + 1
-                    },
-                    data: result,
-                    })
-                })
-                .catch(err => {
-                    res.status(400).json({
-                        status: 400,
-                        error: true,
-                        message: err
-                    })
-                })
-            }
+        .then(result => {
+            return responseHelper.response(res, 200, false, `Success delete engineer with id: ${id}`, result)
         })
-    }
+        .catch(err => {
+            return responseHelper.response(res, 400, true, `Error delete engineer with id: ${id}`)
+        })
+    },
 }
