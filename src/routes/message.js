@@ -5,9 +5,8 @@ const Route = express.Router()
 const message = require('../controllers/message')
 
 Route
-    .post('/toEngineer', message.addMessageToEngineer)
-    .post('/toCompany', message.addMessageToCompany)
-    .get('/', message.getMessage)
+  .post('/toEngineer', message.addMessageToEngineer)
+  .post('/toCompany', message.addMessageToCompany)
+  .get('/', message.getMessage)
 
 module.exports = Route
-
