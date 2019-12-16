@@ -4,34 +4,30 @@ const jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWT_SECRET
 // import model
 const authsModel = require('../models/auth')
+// import helper
+const responseHelper = require('../helper/response')
 
 module.exports = {
   loginEngineer: (req, res) => {
     const email = req.data.email
+    const accessToken = req.token
     authsModel.loginEngineer(email)
       .then(result => {
-        res.json(result.filter(post => post.email === email))
+        return responseHelper.responseAuth(res, 200, false, 'Authorized!', accessToken, result.filter(post => post.email === email))
       })
       .catch(err => {
-        res.json({
-          status: 400,
-          error: true,
-          message: err
-        })
+        return responseHelper.responseAuth(res, 400, false, 'Unauthorized!')
       })
   },
   loginCompany: (req, res) => {
     const email = req.data.email
-    authsModel.loginCompany()
+    const accessToken = req.token
+    authsModel.loginEngineer(email)
       .then(result => {
-        res.json(result.filter(post => post.email === email))
+        return responseHelper.responseAuth(res, 200, false, 'Authorized!', accessToken, result.filter(post => post.email === email))
       })
       .catch(err => {
-        res.json({
-          status: 400,
-          error: true,
-          message: err
-        })
+        return responseHelper.responseAuth(res, 400, false, 'Unauthorized!')
       })
   },
   authEngineer: (req, res) => {
@@ -43,20 +39,11 @@ module.exports = {
         id = id.split('\"')[3]
 
         const data = { email, id }
-
         const accessToken = jwt.sign(data, jwtSecret, { expiresIn: 60 * 60 })
         if (!id) {
-          res.status(404).json({
-            status: 404,
-            message: 'Error! Email or Password is wrong'
-          })
+          return responseHelper.responseAuth(res, 400, false, 'Error! Email or Password not found')
         } else {
-          res.status(201).json({
-            status: 201,
-            message: 'Success Login!',
-            accessToken,
-            data
-          })
+          return responseHelper.responseAuth(res, 200, false, 'Success Login', accessToken, data)
         }
       })
   },
@@ -69,20 +56,11 @@ module.exports = {
         id = id.split('\"')[3]
 
         const data = { email, id }
-
         const accessToken = jwt.sign(data, jwtSecret, { expiresIn: 60 * 60 })
         if (!id) {
-          res.status(404).json({
-            status: 404,
-            message: 'Error! Email or Password is wrong.'
-          })
+          return responseHelper.responseAuth(res, 400, false, 'Error! Email or Password not found')
         } else {
-          res.status(201).json({
-            status: 201,
-            message: 'Success Login!',
-            accessToken,
-            data
-          })
+          return responseHelper.responseAuth(res, 200, false, 'Success Login', accessToken, data)
         }
       })
   }

@@ -14,6 +14,16 @@ module.exports = {
         return responseHelper.response(res, 400, true, err)
       })
   },
+  getCompanybyId: (req, res) => {
+    const id = req.params.id
+    companiesModel.getCompanybyId(id)
+      .then(result => {
+        return responseHelper.response(res, 200, false, `Success get company with id: ${id}`, {}, result)
+      })
+      .catch(err => {
+        return responseHelper.response(res, 400, true, `Error get company with id: ${id}`)
+      })
+  },
   createCompany: (req, res) => {
     if (!req.file) {
       return responseHelper.response(res, 400, true, 'Error! No image selected.')

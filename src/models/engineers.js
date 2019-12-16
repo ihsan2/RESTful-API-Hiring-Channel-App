@@ -12,6 +12,17 @@ module.exports = {
       })
     })
   },
+  getEngineerbyId: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM engineer WHERE id = ?`, id, (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
+  },
   createEngineer: (data) => {
     return new Promise((resolve, reject) => {
       db.query('INSERT INTO engineer SET ?', data, (err, result) => {

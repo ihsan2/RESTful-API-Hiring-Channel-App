@@ -12,6 +12,17 @@ module.exports = {
       })
     })
   },
+  getCompanybyId: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM company WHERE id = ?`, id, (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
+  },
   createCompany: (data) => {
     return new Promise((resolve, reject) => {
       db.query('INSERT INTO company SET ?', data, (err, result) => {
