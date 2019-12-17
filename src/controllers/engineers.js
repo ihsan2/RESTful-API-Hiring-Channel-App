@@ -4,6 +4,7 @@ const db = require("../configs/db");
 // import model
 const engineersModel = require("../models/engineers");
 const responseHelper = require("../helper/response");
+require("dotenv").config();
 
 module.exports = {
   getEngineers: (req, res) => {
@@ -36,18 +37,22 @@ module.exports = {
         totalPage: totalPage,
         perPage: limit,
         currentPage: page,
-        prevLink: `localhost:3000${req.originalUrl.replace(
+        prevLink: `${req.host}:${process.env.PORT}${req.originalUrl.replace(
           "page=" + page,
           "page=" + parseInt(prevPage)
         )}`,
         nextLink:
           req.originalUrl.indexOf("page") === -1 &&
           req.originalUrl.indexOf("?") === -1
-            ? `localhost:3000${req.originalUrl + "?page=" + parseInt(nextPage)}`
+            ? `${req.host}:${process.env.PORT}${req.originalUrl +
+                "?page=" +
+                parseInt(nextPage)}`
             : req.originalUrl.indexOf("page") === -1 &&
               req.originalUrl.indexOf("?") > -1
-            ? `localhost:3000${req.originalUrl + "&page=" + parseInt(nextPage)}`
-            : `localhost:3000${req.originalUrl.replace(
+            ? `${req.host}:${process.env.PORT}${req.originalUrl +
+                "&page=" +
+                parseInt(nextPage)}`
+            : `${req.host}:${process.env.PORT}${req.originalUrl.replace(
                 "page=" + page,
                 "page=" + parseInt(nextPage)
               )}`
