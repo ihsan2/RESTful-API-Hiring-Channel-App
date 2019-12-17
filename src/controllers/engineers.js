@@ -32,31 +32,33 @@ module.exports = {
       const nextPage =
         parseInt(page) === totalPage ? totalPage : parseInt(page) + 1;
 
-      const pageDetail = {
-        totalRow,
-        totalPage: totalPage,
-        perPage: limit,
-        currentPage: page,
-        prevLink: `${req.host}:${process.env.PORT}${req.originalUrl.replace(
-          "page=" + page,
-          "page=" + parseInt(prevPage)
-        )}`,
-        nextLink:
-          req.originalUrl.indexOf("page") === -1 &&
-          req.originalUrl.indexOf("?") === -1
-            ? `${req.host}:${process.env.PORT}${req.originalUrl +
-                "?page=" +
-                parseInt(nextPage)}`
-            : req.originalUrl.indexOf("page") === -1 &&
-              req.originalUrl.indexOf("?") > -1
-            ? `${req.host}:${process.env.PORT}${req.originalUrl +
-                "&page=" +
-                parseInt(nextPage)}`
-            : `${req.host}:${process.env.PORT}${req.originalUrl.replace(
-                "page=" + page,
-                "page=" + parseInt(nextPage)
-              )}`
-      };
+      const pageDetail = [
+        {
+          totalRow,
+          totalPage: totalPage,
+          perPage: limit,
+          currentPage: page,
+          prevLink: `${req.host}:${process.env.PORT}${req.originalUrl.replace(
+            "page=" + page,
+            "page=" + parseInt(prevPage)
+          )}`,
+          nextLink:
+            req.originalUrl.indexOf("page") === -1 &&
+            req.originalUrl.indexOf("?") === -1
+              ? `${req.host}:${process.env.PORT}${req.originalUrl +
+                  "?page=" +
+                  parseInt(nextPage)}`
+              : req.originalUrl.indexOf("page") === -1 &&
+                req.originalUrl.indexOf("?") > -1
+              ? `${req.host}:${process.env.PORT}${req.originalUrl +
+                  "&page=" +
+                  parseInt(nextPage)}`
+              : `${req.host}:${process.env.PORT}${req.originalUrl.replace(
+                  "page=" + page,
+                  "page=" + parseInt(nextPage)
+                )}`
+        }
+      ];
 
       if (page > totalPage) {
         return responseHelper.response(
