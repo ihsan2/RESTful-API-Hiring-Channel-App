@@ -195,6 +195,7 @@ module.exports = {
       skill,
       location,
       date_of_birth,
+      expected_salary,
       showcase
     } = req.body;
     const image = req.file.filename;
