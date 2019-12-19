@@ -8,7 +8,7 @@ const engineers = require("../controllers/engineers");
 const token = require("../helper/auth");
 const responseHelper = require("../helper/response");
 
-const DIR = "src/uploads/engineer"; // set directory of engineer image
+const DIR = "public/engineer"; // set directory of engineer image
 const maxSize = 1024 * 1024 * 7; // set maximun size of file image to 1 MB
 // set destination & filename
 const storage = multer.diskStorage({
