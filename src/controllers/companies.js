@@ -6,8 +6,9 @@ const responseHelper = require("../helper/response");
 
 module.exports = {
   getCompanies: (req, res) => {
+    const search = req.query.search ? req.query.search : "";
     companiesModel
-      .getCompanies()
+      .getCompanies(search)
       .then(result => {
         return responseHelper.response(
           res,
