@@ -4,8 +4,7 @@ module.exports = {
   getCompanies: search => {
     return new Promise((resolve, reject) => {
       db.query(
-        "SELECT * FROM company WHERE name = ?",
-        search,
+        `SELECT * FROM company WHERE name like '%${search}%'`,
         (err, result) => {
           if (!err) {
             resolve(result);
