@@ -115,10 +115,26 @@ module.exports = {
     const { email, password } = req.body;
     let id = "";
     authsModel.checkEmailExistsCompany(email, password).then(result => {
-      id = JSON.stringify(result);
-      id = id.split(`\"`)[3];
+      let id, name, image, location, description;
 
-      const data = { email, id };
+      result.map(function(res) {
+        (id = res.id),
+          (name = res.name),
+          (image = res.image),
+          (location = res.location),
+          (description = res.description);
+      });
+
+      const data = {
+        id,
+        email,
+        password,
+        name,
+        image,
+        location,
+        description
+      };
+
       const accessToken = jwt.sign(data, jwtSecret, { expiresIn: 60 * 60 });
       if (!id) {
         return responseHelper.responseAuth(

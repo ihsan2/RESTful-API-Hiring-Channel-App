@@ -4,7 +4,7 @@ const Route = express.Router();
 const path = require("path");
 const responseHelper = require("../helper/response");
 
-const DIR = "public/engineer"; // set directory of engineer image
+const DIR = "public/company"; // set directory of engineer image
 const maxSize = 1024 * 1024 * 7; // set maximun size of file image to 1 MB
 // set destination & filename
 const storage = multer.diskStorage({
