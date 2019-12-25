@@ -60,7 +60,8 @@ module.exports = {
         expected_salary,
         showcase,
         date_created,
-        date_updated = "";
+        date_updated,
+        role = "engineer";
 
       result.map(function(res) {
         (id = res.id),
@@ -89,7 +90,8 @@ module.exports = {
         expected_salary,
         showcase,
         date_created,
-        date_updated
+        date_updated,
+        role
       };
       const accessToken = jwt.sign(data, jwtSecret, { expiresIn: 60 * 60 });
       if (!id) {
@@ -115,7 +117,12 @@ module.exports = {
     const { email, password } = req.body;
     let id = "";
     authsModel.checkEmailExistsCompany(email, password).then(result => {
-      let id, name, image, location, description;
+      let id,
+        name,
+        image,
+        location,
+        description,
+        role = "company";
 
       result.map(function(res) {
         (id = res.id),
@@ -132,7 +139,8 @@ module.exports = {
         name,
         image,
         location,
-        description
+        description,
+        role
       };
 
       const accessToken = jwt.sign(data, jwtSecret, { expiresIn: 60 * 60 });
