@@ -115,14 +115,14 @@ module.exports = {
       });
   },
   createEngineer: (req, res) => {
-    if (!req.file) {
-      return responseHelper.response(
-        res,
-        400,
-        true,
-        "Error! No image selected."
-      );
-    }
+    // if (!req.file) {
+    //   return responseHelper.response(
+    //     res,
+    //     400,
+    //     true,
+    //     "Error! No image selected."
+    //   );
+    // }
 
     const id = uuidv4();
     const {
@@ -136,7 +136,7 @@ module.exports = {
       expected_salary,
       showcase
     } = req.body;
-    const image = req.file.filename;
+    const image = typeof req.file !== "undefined" ? req.file.filename : "";
     const date_created = new Date();
     const date_updated = new Date();
     const data = {
