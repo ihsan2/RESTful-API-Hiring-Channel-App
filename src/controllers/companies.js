@@ -73,18 +73,10 @@ module.exports = {
       });
   },
   updateCompany: (req, res) => {
-    if (!req.file) {
-      return responseHelper.response(
-        res,
-        400,
-        true,
-        "Error! No image selected."
-      );
-    }
-
     const id = req.params.id;
     const { email, password, name, location, description } = req.body;
-    const image = req.file.filename;
+    const image =
+      typeof req.file !== "undefined" ? req.file.filename : req.body.image;
     const data = { id, email, password, name, image, location, description };
     companiesModel
       .updateCompany(data, id)

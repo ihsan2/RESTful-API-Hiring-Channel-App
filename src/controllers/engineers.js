@@ -198,7 +198,8 @@ module.exports = {
       expected_salary,
       showcase
     } = req.body;
-    const image = req.file.filename;
+    const image =
+      typeof req.file !== "undefined" ? req.file.filename : req.body.image;
     const date_updated = new Date();
     const data = {
       id,
