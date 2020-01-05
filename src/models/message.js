@@ -37,5 +37,20 @@ module.exports = {
         }
       );
     });
+  },
+  deleteMessage: id_message => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        "DELETE from engineer WHERE id_message = ?",
+        id_message,
+        (err, result) => {
+          if (!err) {
+            resolve(result);
+          } else {
+            reject(new Error(err));
+          }
+        }
+      );
+    });
   }
 };
