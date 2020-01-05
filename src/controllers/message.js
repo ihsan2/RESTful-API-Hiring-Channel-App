@@ -49,7 +49,8 @@ module.exports = {
       });
   },
   getMessage: (req, res) => {
-    const { id_company, id_engineer } = req.params;
+    const id_company = req.query.id_company;
+    const id_engineer = req.query.id_engineer;
     messageModel
       .getMessage(id_company, id_engineer)
       .then(result => {
