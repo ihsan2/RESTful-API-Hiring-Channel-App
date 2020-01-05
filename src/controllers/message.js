@@ -69,10 +69,31 @@ module.exports = {
         });
       });
   },
-  deleteMessage: (req, res) => {
+  deleteMessagetoCompany: (req, res) => {
     const id_message = req.params.id_message;
     messageModel
-      .deleteMessage(id_message)
+      .deleteMessagetoCompany(id_message)
+      .then(result => {
+        return responseHelper.response(
+          res,
+          200,
+          false,
+          `Success delete message with id: ${id_message}`
+        );
+      })
+      .catch(err => {
+        return responseHelper.response(
+          res,
+          400,
+          true,
+          `Error delete message with id: ${id_message}`
+        );
+      });
+  },
+  deleteMessagetoEngineer: (req, res) => {
+    const id_message = req.params.id_message;
+    messageModel
+      .deleteMessagetoEngineer(id_message)
       .then(result => {
         return responseHelper.response(
           res,
