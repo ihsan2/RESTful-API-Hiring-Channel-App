@@ -1,37 +1,41 @@
-const db = require('../configs/db')
+const db = require("../configs/db");
 
 module.exports = {
-  addMessageToEngineer: (data) => {
+  addMessageToEngineer: data => {
     return new Promise((resolve, reject) => {
-      db.query('INSERT INTO message_to_engineer SET ?', data, (err, result) => {
+      db.query("INSERT INTO message_to_engineer SET ?", data, (err, result) => {
         if (!err) {
-          resolve(result)
+          resolve(result);
         } else {
-          reject(new Error(err))
+          reject(new Error(err));
         }
-      })
-    })
+      });
+    });
   },
-  addMessageToCompany: (data) => {
+  addMessageToCompany: data => {
     return new Promise((resolve, reject) => {
-      db.query('INSERT INTO message_to_company SET ?', data, (err, result) => {
+      db.query("INSERT INTO message_to_company SET ?", data, (err, result) => {
         if (!err) {
-          resolve(result)
+          resolve(result);
         } else {
-          reject(new Error(err))
+          reject(new Error(err));
         }
-      })
-    })
+      });
+    });
   },
-  getMessage: (company, engineer) => {
+  getMessage: (id_company, id_engineer) => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM message WHERE id_company = ? and id_engineer = ? ORDER BY date_created DESC', [company, engineer], (err, result) => {
-        if (!err) {
-          resolve(result)
-        } else {
-          reject(new Error(err))
+      db.query(
+        "SELECT * FROM message WHERE id_company = ? and id_engineer = ? ORDER BY date_created DESC",
+        [id_company, id_engineer],
+        (err, result) => {
+          if (!err) {
+            resolve(result);
+          } else {
+            reject(new Error(err));
+          }
         }
-      })
-    })
+      );
+    });
   }
-}
+};

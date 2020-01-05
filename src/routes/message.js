@@ -1,12 +1,11 @@
-const express = require('express')
-const Route = express.Router()
+const express = require("express");
+const Route = express.Router();
 
 // import controller
-const message = require('../controllers/message')
+const message = require("../controllers/message");
 
-Route
-  .post('/toEngineer', message.addMessageToEngineer)
-  .post('/toCompany', message.addMessageToCompany)
-  .get('/', message.getMessage)
+Route.post("/toEngineer", message.addMessageToEngineer)
+  .post("/toCompany", message.addMessageToCompany)
+  .get("/", message.getMessage);
 
-module.exports = Route
+module.exports = Route;
