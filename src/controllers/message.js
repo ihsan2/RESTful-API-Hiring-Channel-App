@@ -28,7 +28,7 @@ module.exports = {
   addMessageToCompany: (req, res) => {
     const { id_company, id_engineer, message } = req.body;
     const date_created = new Date();
-    const id_message = `${id_company}/${id_engineer}/${Date.now()}`;
+    const id_message = `${id_company}S${id_engineer}S${Date.now()}`;
     const data = { id_message, id_company, id_engineer, message, date_created };
     messageModel
       .addMessageToCompany(data)
