@@ -117,15 +117,6 @@ module.exports = {
       });
   },
   createEngineer: (req, res) => {
-    // if (!req.file) {
-    //   return responseHelper.response(
-    //     res,
-    //     400,
-    //     true,
-    //     "Error! No image selected."
-    //   );
-    // }
-
     const id = uuidv4();
     const {
       email,
@@ -179,15 +170,6 @@ module.exports = {
       });
   },
   updateEngineer: (req, res) => {
-    if (!req.file) {
-      return responseHelper.response(
-        res,
-        400,
-        true,
-        "Error! No image selected."
-      );
-    }
-
     const id = req.params.id;
     const {
       email,
