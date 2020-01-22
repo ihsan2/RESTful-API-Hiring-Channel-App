@@ -6,7 +6,7 @@
 
 ## Table of Contents
 
-- [Build With](#built-with)
+- [Built With](#built-with)
 - [Introduction](#introduction)
 - [Requirements](#requirements)
 - [Usage](#usage-for-development)
