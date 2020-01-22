@@ -69,6 +69,25 @@ module.exports = {
         });
       });
   },
+  getMessageId: (req, res) => {
+    const id_company = req.query.id_company;
+    messageModel
+      .getMessageId(id_company)
+      .then(result => {
+        res.status(200).json({
+          status: 200,
+          error: false,
+          data: result
+        });
+      })
+      .catch(err => {
+        res.status(400).json({
+          status: 400,
+          error: true,
+          message: "Error get message"
+        });
+      });
+  },
   deleteMessagetoCompany: (req, res) => {
     const id_message = req.params.id_message;
     messageModel

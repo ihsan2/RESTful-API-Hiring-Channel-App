@@ -38,6 +38,21 @@ module.exports = {
       );
     });
   },
+  getMessageId: id_company => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT * FROM message WHERE id_company = ? GROUP BY id_engineer ORDER by date_created DESC`,
+        id_company,
+        (err, result) => {
+          if (!err) {
+            resolve(result);
+          } else {
+            reject(new Error(err));
+          }
+        }
+      );
+    });
+  },
   deleteMessagetoCompany: id_message => {
     return new Promise((resolve, reject) => {
       db.query(
